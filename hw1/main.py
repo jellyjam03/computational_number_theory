@@ -82,8 +82,31 @@ def medium_fc(A, z, p):
         res = (res + (zi * hi * inv) % p) % p
     return res
 
+def get_inverses(a, p):
+    c = [a[0]]
+    for i in range(1, len(a)):
+        c.append(c[i - 1] * a[i] % p)
+    u = mod_inv(c[-1], p)
+    invs = [0 for _ in range(len(c))]
+    for i in range(len(c) - 1, 0, -1):
+        invs[i] = u * c[i - 1] % p
+        u = u * a[i] % p
+    invs[0] = u
+    return invs
+
+
 def fast_fc(A, z, p):
-    pass
+    invs = get_inverses([(j - i + p) % p for i in A for j in A if i != j], p)
+    inv_idx = 0
+    res = 0
+    for i in A:
+        zi = z[i - 1]
+        for j in A:
+            if i != j:
+                zi = zi * j * invs[inv_idx] % p
+                inv_idx = inv_idx + 1
+        res = (res + zi) % p
+    return res
 
 
 def reconstruct_poly(A, p):
@@ -109,7 +132,7 @@ print(a, enc)
 add_noise(enc, 1)
 print(enc)
 
-decode(enc, 1, medium_fc, 11)
+decode(enc, 1, fast_fc, 11)
 
 # chars = [0b000, 0b001, 0b000, 0b111]
 # (a, enc) = encode(chars, 11, 2, 1, is_number=False)
