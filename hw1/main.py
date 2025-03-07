@@ -39,15 +39,33 @@ def encode(m, p, block_size, s, is_number = False) -> (list, list):
         y.append(evaluate_poly(a, i, p))
     return a, y
 
-(a, enc) = encode(29, 11, 1, 1, is_number=True)
-print(enc)
+def log_exp(x, k, p):
+    if k == 0:
+        return 1
+    if k == 1:
+        return x
+    sq_x = log_exp(x, k // 2, p)
+    if k % 2 == 0:
+        return sq_x * sq_x % p
+    return sq_x * sq_x * x % p
 
-# chars = [0b000, 0b001, 0b000, 0b111]
-# (a, enc) = encode(chars, 11, 2, 1, is_number=False)
-# print(enc)
 
-def slow_fc(A, p):
-    pass
+def mod_inv(a, p):
+    if a < p:
+        a += p
+    # compute a ** (p - 2)
+    return log_exp(a, p - 2, p)
+
+def slow_fc(A, z, p):
+    res = 0
+    for i in A:
+        zi = z[i - 1]
+        for j in A:
+            if i != j:
+                inv = mod_inv(j - i, p)
+                zi = zi * j * inv % p
+        res = (res + zi) % p
+    return res
 
 def medium_fc(A, p):
     pass
@@ -59,15 +77,28 @@ def fast_fc(A, p):
 def reconstruct_poly(A, p):
     pass
 
-def decode(y, s, compute_fc, p):
-    k = len(y) - 2 * s
-    for A in combinations(y, k):
-        fc = compute_fc(A, p)
+def decode(z, s, compute_fc, p):
+    k = len(z) - 2 * s
+    for A in combinations([i for i in range(1, len(z) + 1)], k):
+        fc = compute_fc(A, z, p)
         if fc:
             continue
         # fc is 0
+        print(A)
         return reconstruct_poly(A, p)
 
 def add_noise(y, s):
     for i in range(s):
-        y[i] ^= 1
+        y[i] ^= 2
+
+(a, enc) = encode(29, 11, 1, 1, is_number=True)
+print(a, enc)
+
+add_noise(enc, 1)
+print(enc)
+
+decode(enc, 1, slow_fc, 11)
+
+# chars = [0b000, 0b001, 0b000, 0b111]
+# (a, enc) = encode(chars, 11, 2, 1, is_number=False)
+# print(enc)
