@@ -67,10 +67,22 @@ def slow_fc(A, z, p):
         res = (res + zi) % p
     return res
 
-def medium_fc(A, p):
-    pass
+def medium_fc(A, z, p):
+    res = 0
+    for i in A:
+        zi = z[i - 1]
+        hi, lo = 1, 1
+        for j in A:
+            if i != j:
+                hi = (hi * j) % p
+                lo = (lo * (j - i + p)) % p
+                # inv = mod_inv(j - i, p)
+                # zi = zi * j * inv % p
+        inv = mod_inv(lo, p)
+        res = (res + (zi * hi * inv) % p) % p
+    return res
 
-def fast_fc(A, p):
+def fast_fc(A, z, p):
     pass
 
 
@@ -97,7 +109,7 @@ print(a, enc)
 add_noise(enc, 1)
 print(enc)
 
-decode(enc, 1, slow_fc, 11)
+decode(enc, 1, medium_fc, 11)
 
 # chars = [0b000, 0b001, 0b000, 0b111]
 # (a, enc) = encode(chars, 11, 2, 1, is_number=False)
