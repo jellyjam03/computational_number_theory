@@ -6,6 +6,11 @@ def convert_base(x, p) -> list:
     return res[::-1]
 
 def partition_string(m, block_size):
+    if len(m) % block_size != 0:
+        # pad with 0 to the right
+        m += b'\x00' * (block_size - len(m) % block_size)
+
+    # build term a
     res = []
     for i in range(0, len(m), block_size):
         yi = m[i]
