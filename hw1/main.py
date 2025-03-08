@@ -109,8 +109,30 @@ def fast_fc(A, z, p):
     return res
 
 
-def reconstruct_poly(A, p):
-    pass
+def reconstruct_poly(A, z, p):
+    invs = get_inverses([(i - j + p) % p for i in A for j in A if i != j], p)
+    invs_idx = 0
+    poly = np.zeros((len(A)))
+    for i in A:
+        add = np.zeros_like(poly)
+        add[0] = z[i - 1]
+        for j in A:
+            if i != j:
+                add *= invs[invs_idx]
+                invs_idx += 1
+                add %= p
+
+                # multiply with (x + (p - j))
+                # add * x + add * (p - j)
+                # here we shift 1 position to the left
+                temp = np.roll(add, 1)
+                # now we multiply by p - j
+                add *= (p - j)
+                add += temp
+                add %= p
+        poly += add
+        poly %= p
+    return poly.tolist()[::-1]
 
 def decode(z, s, compute_fc, p):
     k = len(z) - 2 * s
@@ -119,8 +141,7 @@ def decode(z, s, compute_fc, p):
         if fc:
             continue
         # fc is 0
-        print(A)
-        return reconstruct_poly(A, p)
+        return reconstruct_poly(A, z, p)
 
 def add_noise(y, s):
     for i in range(s):
@@ -132,7 +153,8 @@ print(a, enc)
 add_noise(enc, 1)
 print(enc)
 
-decode(enc, 1, fast_fc, 11)
+res = decode(enc, 1, fast_fc, 11)
+print(res)
 
 # chars = [0b000, 0b001, 0b000, 0b111]
 # (a, enc) = encode(chars, 11, 2, 1, is_number=False)
