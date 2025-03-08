@@ -13,7 +13,12 @@ def mod_inv(a, p):
     if a < p:
         a += p
     # compute a ** (p - 2)
-    return log_exp(a, p - 2, p)
+    res = 1
+    for _ in range(p - 2):
+        res = res * a % p
+    return res
+
+    # return log_exp(a, p - 2, p)
 
 def slow_fc(A, z, p):
     res = 0
