@@ -1,27 +1,38 @@
 from sympy import nextprime
-from encode import encode
+from encode import encode, partition_string
 from noise import add_noise
 from decode import decode
 from compute_fc import slow_fc, medium_fc, fast_fc
 import time
 
-(a, enc) = encode(29, 11, 1, 1, is_number=True)
-print(a, enc)
+def compare_fc(m, p, block_size, s, is_number=False):
+    (a, enc) = encode(m, p, block_size, s, is_number=is_number)
+    print(f'The initial polynomial: {a}\nIts encoding: {enc}')
 
-add_noise(enc, 1)
-print(enc)
+    add_noise(enc, s)
 
-fc_methods = {'slow_fc': slow_fc, 'medium_fc': medium_fc, 'fast_fc': fast_fc}
-print('fc calculation -- execution time -- result poly')
-for method in fc_methods:
-    start_time = time.time()
-    res = decode(enc, 1, fc_methods[method], 11)
-    end_time = time.time()
-    print(f'{method} -- {end_time - start_time} -- {res}')
+    fc_methods = {'slow_fc': slow_fc, 'medium_fc': medium_fc, 'fast_fc': fast_fc}
+    print('fc calculation -- execution time -- result poly')
+    for method in fc_methods:
+        start_time = time.time()
+        res = decode(enc, s, fc_methods[method], p)
+        end_time = time.time()
+        print(f'{method} -- {end_time - start_time} -- {res}')
 
-# res = decode(enc, 1, fast_fc, 11)
-# print(res)
+def example():
+    p = 11
+    m = 29
+    compare_fc(m, p, 1, 1, True)
 
-# chars = [0b000, 0b001, 0b000, 0b111]
-# (a, enc) = encode(chars, 11, 2, 1, is_number=False)
-# print(enc)
+def demo(filename, p, block_size, s):
+    # retrieve message from m as array of bytes
+    with open(filename, 'rb') as f:
+        message = f.read()
+        # m = partition_string(message, block_size)
+        compare_fc(message, p, block_size, s)
+    pass
+
+p_161 = nextprime(1 << 160)
+
+demo('./message.txt', p_161, 20, 3)
+# example()
