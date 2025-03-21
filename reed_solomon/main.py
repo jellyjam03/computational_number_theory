@@ -1,5 +1,5 @@
 from sympy import nextprime
-from encode import encode, partition_string
+from encode import encode
 from noise import add_noise
 from decode import decode
 from compute_fc import slow_fc, medium_fc, fast_fc
@@ -30,7 +30,6 @@ def demo(filename, p, block_size, s):
         message = f.read()
         # m = partition_string(message, block_size)
         compare_fc(message, p, block_size, s)
-    pass
 
 p_161 = nextprime(1 << 160)
 

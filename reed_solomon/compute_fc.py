@@ -10,7 +10,7 @@ def log_exp(x, k, p):
 
 
 def mod_inv(a, p):
-    if a < p:
+    if a < 0:
         a += p
     # compute a ** (p - 2)
     res = 1
