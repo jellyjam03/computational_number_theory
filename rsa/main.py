@@ -30,6 +30,11 @@ def multi_power_demo():
     x = rd.randint(1, rsa.n - 1)
     y = rsa.encrypt(x)
     print(x, y)
-    print(rsa.slow_decrypt(y))
+    start = time.time()
+    fast_res = rsa.fast_decrypt(y)
+    print(time.time() - start, fast_res)
+    start = time.time()
+    slow_res = rsa.slow_decrypt(y)
+    print(time.time() - start, slow_res)
 
 multi_power_demo()
