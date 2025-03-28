@@ -26,3 +26,18 @@ def garner_crt(system):
         new_x = x[i - 1] + alpha * products[i - 1]
         x.append(new_x)
     return x[-1]
+
+def binary_exp(x, e, m):
+    x %= m
+    bits = [int(bit) for bit in bin(e)[2:]]
+    res = 1
+    for bit in bits:
+        res = res * res % m
+        if bit:
+            res = res * x
+    return res
+
+
+
+if __name__ == '__main__':
+    print(binary_exp(5, 50, 1e40))
