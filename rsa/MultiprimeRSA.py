@@ -9,7 +9,6 @@ class MultiprimeRSA:
         self.n = p * q * r
         self.phi = (p - 1) * (q - 1) * (r - 1)
         self.d = pow(self.e, -1, self.phi)
-        print(self.e * self.d % self.phi)
 
     def encrypt(self, x):
         return pow(x, self.e, self.n)

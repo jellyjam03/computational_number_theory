@@ -19,11 +19,11 @@ def multi_prime_demo():
     start = time.time()
     fast_res = rsa.fast_decrypt(y)
     stop = time.time()
-    print(fast_res, stop - start)
+    print(stop - start, fast_res)
     start = time.time()
     slow_res = rsa.slow_decrypt(y)
     stop = time.time()
-    print(slow_res, stop - start)
+    print(stop - start, slow_res)
 
 def multi_power_demo():
     rsa = MultipowerRSA(p, q, e)
@@ -37,4 +37,7 @@ def multi_power_demo():
     slow_res = rsa.slow_decrypt(y)
     print(time.time() - start, slow_res)
 
-multi_power_demo()
+if __name__ == '__main__':
+    multi_power_demo()
+    print('-' * 30)
+    multi_prime_demo()
