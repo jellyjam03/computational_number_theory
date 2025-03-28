@@ -29,4 +29,6 @@ class MultipowerRSA:
         x_p = x1_p * self.p + x0_p
         system.append((x_p, self.p ** 2))
 
-        return garner_crt(system)
+        # none is because addition chain support
+        # was not added for multi power implementation
+        return garner_crt(system), None

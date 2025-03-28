@@ -21,10 +21,12 @@ class MultiprimeRSA:
         # use Garner's algorithm
         # first compute dec(y) % k for k in (p, q, r)
         system = []
+        chain_lengths = []
         for k in [self.p, self.q, self.r]:
             # module = pow(y % k, self.d % (k - 1), k)
-            module = expo(y % k, self.d % (k - 1), k, extra_param)
+            module, add_chain = expo(y % k, self.d % (k - 1), k, extra_param)
             system.append((module, k))
+            chain_lengths.append(len(add_chain))
 
         # apply Garner's algorithm over the congruence system
-        return garner_crt(system)
+        return garner_crt(system), sum(chain_lengths) / 3

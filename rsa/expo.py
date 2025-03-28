@@ -1,4 +1,4 @@
-def binary_exp(x, e, m):
+def binary_exp(x, e, m, _):
     if x == 1 or x == 0:
         return x
 
@@ -100,6 +100,8 @@ def sliding_window_expo(x, e, m, w):
 
     return res, add_chain
 
+def default_expo(x, e, m, _):
+    return pow(x, e, m), []
 
 if __name__ == '__main__':
     print(sliding_window_expo(5, 15, 3, 1e15))
