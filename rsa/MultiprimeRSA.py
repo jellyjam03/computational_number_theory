@@ -1,4 +1,5 @@
 from utility import garner_crt
+from rsa.expo import default_expo
 
 class MultiprimeRSA:
     def __init__(self, p, q, r, e):
@@ -16,12 +17,13 @@ class MultiprimeRSA:
     def slow_decrypt(self, y):
         return pow(y, self.d, self.n)
 
-    def fast_decrypt(self, y):
+    def fast_decrypt(self, y, expo = default_expo, extra_param = None):
         # use Garner's algorithm
         # first compute dec(y) % k for k in (p, q, r)
         system = []
         for k in [self.p, self.q, self.r]:
-            module = pow(y % k, self.d % (k - 1), k)
+            # module = pow(y % k, self.d % (k - 1), k)
+            module = expo(y % k, self.d % (k - 1), k, extra_param)
             system.append((module, k))
 
         # apply Garner's algorithm over the congruence system
