@@ -23,7 +23,7 @@ def legendre_jacobi(a, m):
 
     s = 0
     while a % 2 == 0:
-        a /= 2
+        a //= 2
         s += 1
 
     return legendre_jacobi(a, m) * (1 if s % 2 == 0 else legendre_jacobi(2, m))
