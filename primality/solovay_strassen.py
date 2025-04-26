@@ -41,11 +41,11 @@ def solovay_strassen(n, samples = 10):
 
         if symbol == 0 or pow(a, (n - 1) // 2, n) != symbol:
             # n is surely composite
-            return 0
+            return False
 
     # if no contradiction of the primality of n was found
     # assume n is prime with a tiny error margin
-    return 1
+    return True
 
 
 if __name__ == '__main__':
