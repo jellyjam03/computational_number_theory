@@ -33,11 +33,8 @@ def solovay_strassen(n, nr_samples = 10):
         print("Input must be an odd integer larger or equal to 3.\n")
         return None
 
-    # generate a subset of numbers to avoid duplicates in samples
-    nr_samples = min(nr_samples, n - 3)
-    samples = rd.sample(range(2, n - 2), nr_samples)
-
-    for a in samples:
+    for _ in range(nr_samples):
+        a = rd.randint(2, n - 2)
         symbol = legendre_jacobi(a, n)
         if symbol == -1:
             symbol = n - 1
@@ -49,7 +46,6 @@ def solovay_strassen(n, nr_samples = 10):
     # if no contradiction of the primality of n was found
     # assume n is prime with a tiny error margin
     return True
-
 
 if __name__ == '__main__':
     print(solovay_strassen(5393, 1))
