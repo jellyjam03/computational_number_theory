@@ -28,13 +28,16 @@ def legendre_jacobi(a, m):
 
     return legendre_jacobi(a, m) * (1 if s % 2 == 0 else legendre_jacobi(2, m))
 
-def solovay_strassen(n, samples = 10):
+def solovay_strassen(n, nr_samples = 10):
     if n < 3 or n % 2 == 0:
         print("Input must be an odd integer larger or equal to 3.\n")
         return None
 
-    for _ in range(samples):
-        a = rd.randint(2, n - 2)
+    # generate a subset of numbers to avoid duplicates in samples
+    nr_samples = min(nr_samples, n - 3)
+    samples = rd.sample(range(2, n - 2), nr_samples)
+
+    for a in samples:
         symbol = legendre_jacobi(a, n)
         if symbol == -1:
             symbol = n - 1
