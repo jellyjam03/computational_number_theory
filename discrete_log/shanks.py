@@ -20,13 +20,19 @@ def get_generator(p):
     # p prime
     # returns a generator element of the group Zp
     phi = p - 1
+    fact = prime_factors(phi)
     for g in range(2, p):
         # is g a generator of Zp?
-        # g = p1^e1 * p2^e2 * ... * pk^ek
+        # phi = p1^e1 * p2^e2 * ... * pk^ek
         # g is a generator if g^(phi(p) / pi) != 1, i = 1, ..k
-        pass
 
-    pass
+        for factor in fact:
+            if pow(g, phi // factor, p) == 1:
+                break
+        else:
+            return g
+
+    return None
 
 def shanks(alpha, beta, p):
     # p, a prime
@@ -42,5 +48,5 @@ if __name__ == '__main__':
     #
     # epsilon = shanks(alpha, beta, p)
     # print(epsilon, pow(alpha, epsilon, p))
-    print(prime_factors(900))
+    print(get_generator(17))
     pass
