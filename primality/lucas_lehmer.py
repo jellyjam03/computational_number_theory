@@ -1,3 +1,5 @@
+import time
+
 def naive_is_prime(n):
     if n < 2:
         return False
@@ -22,7 +24,11 @@ def reduce_mersenne(a, n):
 
     return a if a < m else 0
 
-def lucas_lehmer(n, samples = 10):
+def reduce_modulo(a, n):
+    m = (1 << n) - 1
+    return a % m
+
+def lucas_lehmer(n, reduction_func, samples = 10):
     if n == 2:
         return True
 
@@ -32,11 +38,21 @@ def lucas_lehmer(n, samples = 10):
     u = 4
     for _ in range(n - 2):
         u = pow(u, 2) - 2
-        u = reduce_mersenne(u, n)
+        u = reduction_func(u, n)
 
     return u == 0
 
 if __name__ == '__main__':
-    for x in range(60):
-        if lucas_lehmer(x) != naive_is_prime((1 << x) - 1):
+    lucas_lehmer(3, reduce_mersenne)
+    for x in range(20):
+        if lucas_lehmer(x, reduce_mersenne) != naive_is_prime((1 << x) - 1):
             print(x)
+
+    funcs = {"reduce modulo": reduce_modulo, "reduce mersenne": reduce_mersenne}
+    for name, func in funcs.items():
+        start = time.time()
+        result = lucas_lehmer(1009, func)
+        end = time.time()
+
+        print(name, result, end - start)
+
