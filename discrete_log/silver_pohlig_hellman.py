@@ -1,7 +1,9 @@
 import random as rd
+from random import randint
+
 from rsa.utility import garner_crt
 from discrete_log.utility import generate_smooth_prime
-from discrete_log.utility import get_generator
+from discrete_log.utility import get_generator, factorize
 
 # use Silver-Pohlig-Hellman algotithm to find log_alpha(beta) modulo p
 
@@ -35,7 +37,16 @@ def sph(alpha, beta, p, fact, pows):
     return garner_crt(system)
 
 if __name__ == '__main__':
-    print(sph(6, 5, 41, [2, 5], [3, 1]))
+    # n = 11111111111111111111111
+    # fact, pows = factorize(n - 1)
+    # print(fact, pows)
+    # alph = get_generator(n, fact)
+    # beta = randint(2, n - 1)
+    # eps = sph(alph, beta, n, fact, pows)
+    # print(alph, beta)
+    # print(eps)
+    # print(pow(alph, eps, n))
+    # print(sph(6, 5, 41, [2, 5], [3, 1]))
 
     p, fact, pows = generate_smooth_prime()
     alpha = get_generator(p, fact)
@@ -44,7 +55,3 @@ if __name__ == '__main__':
     epsilon = sph(alpha, beta, p, fact, pows)
     print(epsilon)
     print(beta, pow(alpha, epsilon, p))
-
-
-    # p = nextprime((1 << 1024))
-    # factorize(p)

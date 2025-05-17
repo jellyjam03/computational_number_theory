@@ -7,7 +7,7 @@ def factorize(n):
     while d * d <= n:
         if n % d == 0:
             fact.append(d)
-        pows.append(0)
+            pows.append(0)
         while n % d == 0:
             pows[-1] += 1
             n //= d
@@ -33,19 +33,21 @@ def get_generator(p, fact):
             return g
     return None
 
-def generate_smooth_prime(bit_length=1024, max_factor_bits=64):
+def generate_smooth_prime(bit_length=1024, max_factor_bits=16):
     # Try different sets of small primes until we find a good one
     while True:
-        factors = []
+        factors = [2]
         current_product = 2  # start with 2 to ensure even p - 1
         while current_product.bit_length() < bit_length - 20:
-            q = randprime(3, 2 ** max_factor_bits)
+            q = randprime(10000, 2 ** max_factor_bits)
             if q not in factors:  # avoid duplicates
                 factors.append(q)
                 current_product *= q
 
         # Try small odd multipliers k to get a candidate p
         for k in range(1, 10000, 2):
-            p_candidate = current_product * k + 1
-            if p_candidate.bit_length() >= bit_length and isprime(p_candidate):
-                return p_candidate, sorted(factors + [k]), [1 for _ in range(len(factors))]
+            if k not in factors:
+                p_candidate = current_product * k + 1
+                if p_candidate.bit_length() >= bit_length and isprime(p_candidate):
+                    k_fact, k_pow = factorize(k)
+                    return p_candidate, sorted(factors + k_fact), k_pow + [1 for _ in range(len(factors))]
